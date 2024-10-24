@@ -19,53 +19,62 @@ public class CamionController {
     private CamionService camionService;
 
     @PostMapping("/create")
-    public ResponseEntity<CamionModel> crearCamion(@RequestBody CamionModel camion) {
+    public ResponseEntity<?> crearCamion(@RequestBody CamionModel camion) {
         try {
             CamionModel nuevoCamion = camionService.crearCamion(camion);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCamion);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al crear el camión: " + e.getMessage());
         }
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<CamionModel>> obtenerTodosLosCamiones() {
+    public ResponseEntity<?> obtenerTodosLosCamiones() {
         try {
             List<CamionModel> camiones = camionService.obtenerTodosLosCamiones();
             return ResponseEntity.ok(camiones);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener la lista de camiones: " + e.getMessage());
         }
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<CamionModel> obtenerCamionPorId(@PathVariable Integer id) {
+    public ResponseEntity<?> obtenerCamionPorId(@PathVariable Integer id) {
         try {
-            return camionService.obtenerCamionPorId(id)
-                    .map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+            Optional<CamionModel> optionalCamion = camionService.obtenerCamionPorId(id);
+            if (optionalCamion.isPresent()) {
+                return ResponseEntity.ok(optionalCamion.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Camión no encontrado con ID: " + id);
+            }
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener el camión por ID: " + e.getMessage());
         }
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<CamionModel> actualizarCamion(@PathVariable Integer id, @RequestBody CamionModel camion) {
+    public ResponseEntity<?> actualizarCamion(@PathVariable Integer id, @RequestBody CamionModel camion) {
         try {
             CamionModel camionActualizado = camionService.actualizarCamion(id, camion);
             return ResponseEntity.ok(camionActualizado);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar el camión: " + e.getMessage());
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> eliminarCamion(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminarCamion(@PathVariable Integer id) {
         try {
             camionService.eliminarCamion(id);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar el camión: " + e.getMessage());
         }
     }
 }

@@ -26,52 +26,67 @@ public class PaqueteController {
     private PaqueteService paqueteService;
 
     @PostMapping("/create")
-    public ResponseEntity<PaqueteModel> crearPaquete(@RequestBody PaqueteModel paquete) {
+    public ResponseEntity<?> crearPaquete(@RequestBody PaqueteModel paquete) {
         try {
             PaqueteModel nuevoPaquete = paqueteService.guardaPaquete(paquete);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevoPaquete);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al crear el paquete: " + e.getMessage());
         }
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<PaqueteModel>> obtenerTodosLosPaquetes() {
+    public ResponseEntity<?> obtenerTodosLosPaquetes() {
         try {
             List<PaqueteModel> paquetes = paqueteService.getAllPaquetes();
             return ResponseEntity.ok(paquetes);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener todos los paquetes: " + e.getMessage());
         }
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<PaqueteModel> getPaqueteById(@PathVariable int id) {
-        PaqueteModel paquete = paqueteService.getPaqueteByID(id);
-        if (paquete != null) {
-            return new ResponseEntity<>(paquete, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> getPaqueteById(@PathVariable int id) {
+        try {
+            PaqueteModel paquete = paqueteService.getPaqueteByID(id);
+            if (paquete != null) {
+                return ResponseEntity.ok(paquete);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Paquete no encontrado con ID: " + id);
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener el paquete por ID: " + e.getMessage());
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<PaqueteModel> updatePaquete(@RequestBody PaqueteModel paquete) {
-        PaqueteModel paqueteActualizado = paqueteService.updatePaquete(paquete);
-        if (paqueteActualizado != null) {
-            return new ResponseEntity<>(paqueteActualizado, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> updatePaquete(@RequestBody PaqueteModel paquete) {
+        try {
+            PaqueteModel paqueteActualizado = paqueteService.updatePaquete(paquete);
+            if (paqueteActualizado != null) {
+                return ResponseEntity.ok(paqueteActualizado);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Error al actualizar el paquete. Verifica los datos proporcionados.");
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar el paquete: " + e.getMessage());
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> eliminarPaquete(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminarPaquete(@PathVariable Integer id) {
         try {
             paqueteService.deletePaqueteByID(id);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar el paquete: " + e.getMessage());
         }
     }
 }

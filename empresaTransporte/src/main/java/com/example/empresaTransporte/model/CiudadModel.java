@@ -14,13 +14,13 @@ import jakarta.persistence.OneToMany;
 public class CiudadModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idCiudad;  // ID autoincrement tipo Integer
+    private Integer idCiudad;
     
 	private String nombreCiudad;
     
     @OneToMany(mappedBy = "ciudad")
     @JsonIgnore
-    private List<DireccionModel> direcciones;  // Relación One-to-Many con DireccionModel
+    private List<DireccionModel> direcciones;
     
     public Integer getIdCiudad() {
 		return idCiudad;

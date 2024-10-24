@@ -14,7 +14,7 @@ import jakarta.persistence.ManyToMany;
 public class CamionModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idCamion;  // ID autoincrement tipo Integer
+    private Integer idCamion;
     
     private String matricula;
     private String modelo;

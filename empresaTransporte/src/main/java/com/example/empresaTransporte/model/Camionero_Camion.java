@@ -14,7 +14,7 @@ import jakarta.persistence.ManyToOne;
 public class Camionero_Camion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idConduccion;  // ID autoincrement tipo Integer
+    private Integer idConduccion;
     
     private LocalDate fecha;
     

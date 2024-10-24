@@ -39,7 +39,7 @@ public class CamioneroCamionServiceImpl implements CamioneroCamionService {
     @Override
     public Camionero_Camion crearCamioneroCamion(Camionero_Camion camioneroCamion) {
         try {
-            // Cargar completamente el camionero
+            // Cargar el camionero
             Optional<CamioneroModel> camioneroOptional = camioneroRepository.findById(camioneroCamion.getCamionero().getIdCamionero());
             if (camioneroOptional.isPresent()) {
                 camioneroCamion.setCamionero(camioneroOptional.get());
@@ -47,7 +47,7 @@ public class CamioneroCamionServiceImpl implements CamioneroCamionService {
                 throw new RuntimeException("Camionero no encontrado con ID: " + camioneroCamion.getCamionero().getIdCamionero());
             }
 
-            // Cargar completamente el camión
+            // Cargar el camión
             Optional<CamionModel> camionOptional = camionRepository.findById(camioneroCamion.getCamion().getIdCamion());
             if (camionOptional.isPresent()) {
                 camioneroCamion.setCamion(camionOptional.get());

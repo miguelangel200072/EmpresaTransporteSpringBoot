@@ -46,7 +46,7 @@ public class CiudadServiceImpl implements CiudadService {
     @Override
     public CiudadModel actualizarCiudad(Integer id, CiudadModel ciudad) {
         try {
-            ciudad.setIdCiudad(id); // Asegúrate de tener este método en tu modelo
+            ciudad.setIdCiudad(id);
             return ciudadRepository.save(ciudad);
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar la ciudad: " + e.getMessage(), e);

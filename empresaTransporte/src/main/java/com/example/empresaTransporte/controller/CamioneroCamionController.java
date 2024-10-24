@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/camionero_camion")
@@ -17,53 +18,63 @@ public class CamioneroCamionController {
     private CamioneroCamionService camioneroCamionService;
 
     @PostMapping("/create")
-    public ResponseEntity<Camionero_Camion> crearRelacion(@RequestBody Camionero_Camion camioneroCamion) {
+    public ResponseEntity<?> crearRelacion(@RequestBody Camionero_Camion camioneroCamion) {
         try {
             Camionero_Camion nuevaRelacion = camioneroCamionService.crearCamioneroCamion(camioneroCamion);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevaRelacion);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al crear la relación camionero-camión: " + e.getMessage());
         }
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Camionero_Camion>> obtenerTodasLasRelaciones() {
+    public ResponseEntity<?> obtenerTodasLasRelaciones() {
         try {
             List<Camionero_Camion> relaciones = camioneroCamionService.obtenerTodosLosCamionerosCamiones();
             return ResponseEntity.ok(relaciones);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener las relaciones camionero-camión: " + e.getMessage());
         }
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Camionero_Camion> obtenerRelacionPorId(@PathVariable Integer id) {
+    public ResponseEntity<?> obtenerRelacionPorId(@PathVariable Integer id) {
         try {
-            return camioneroCamionService.obtenerCamioneroCamionPorId(id)
-                    .map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+            Optional<Camionero_Camion> relacion = camioneroCamionService.obtenerCamioneroCamionPorId(id);
+            if (relacion.isPresent()) {
+                return ResponseEntity.ok(relacion.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Relación no encontrada con ID: " + id);
+            }
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener la relación por ID: " + e.getMessage());
         }
     }
 
+
     @PutMapping("/update/{id}")
-    public ResponseEntity<Camionero_Camion> actualizarRelacion(@PathVariable Integer id, @RequestBody Camionero_Camion camioneroCamion) {
+    public ResponseEntity<?> actualizarRelacion(@PathVariable Integer id, @RequestBody Camionero_Camion camioneroCamion) {
         try {
             Camionero_Camion relacionActualizada = camioneroCamionService.actualizarCamioneroCamion(id, camioneroCamion);
             return ResponseEntity.ok(relacionActualizada);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar la relación camionero-camión: " + e.getMessage());
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> eliminarRelacion(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminarRelacion(@PathVariable Integer id) {
         try {
             camioneroCamionService.eliminarCamioneroCamion(id);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar la relación camionero-camión: " + e.getMessage());
         }
     }
 }

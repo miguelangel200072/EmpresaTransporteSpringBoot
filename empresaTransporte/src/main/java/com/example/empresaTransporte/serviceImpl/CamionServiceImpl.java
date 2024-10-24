@@ -46,7 +46,7 @@ public class CamionServiceImpl implements CamionService {
     @Override
     public CamionModel actualizarCamion(Integer id, CamionModel camion) {
         try {
-            camion.setIdCamion(id); // Asegúrate de tener este método en tu modelo
+            camion.setIdCamion(id);
             return camionRepository.save(camion);
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar el camión: " + e.getMessage(), e);

@@ -1,17 +1,20 @@
 package com.example.empresaTransporte.model;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class PaqueteModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idPaquete;  // ID autoincrement tipo Integer
+    private Integer idPaquete;
     
     private String codigoPaquete;
     private String descripcion;
@@ -22,7 +25,15 @@ public class PaqueteModel {
 
     @ManyToOne
     @JoinColumn(name = "idDireccion")
-    private DireccionModel idDireccion;  // Nueva relación con DireccionModel
+    private DireccionModel idDireccion;
+    
+
+    @OneToMany(mappedBy = "paquete")
+    private List<EntregaModel> entregas;
+
+
+    @OneToMany(mappedBy = "paquete")
+    private List<RecogidaModel> recogidas;
 
 	public Integer getIdPaquete() {
 		return idPaquete;

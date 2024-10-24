@@ -46,7 +46,7 @@ public class DireccionServiceImpl implements DireccionService {
     @Override
     public DireccionModel actualizarDireccion(Integer id, DireccionModel direccion) {
         try {
-            direccion.setIdDireccion(id); // Asegúrate de tener este método en tu modelo
+            direccion.setIdDireccion(id);
             return direccionRepository.save(direccion);
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar la dirección: " + e.getMessage(), e);

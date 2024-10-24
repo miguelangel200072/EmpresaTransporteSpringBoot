@@ -17,7 +17,7 @@ import jakarta.persistence.OneToMany;
 public class DireccionModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idDireccion;  // ID autoincrement tipo Integer
+    private Integer idDireccion;
     
     private String tipoVia;
     private String nombreVia;
@@ -27,11 +27,11 @@ public class DireccionModel {
     @ManyToOne
     @JoinColumn(name = "id_ciudad")
     @JsonIgnoreProperties("direcciones")
-    private CiudadModel ciudad;  // Relación Many-to-One con CiudadModel
+    private CiudadModel ciudad;
 
     @OneToMany(mappedBy = "idDireccion")
     @JsonIgnore
-    private List<PaqueteModel> paquetes;  // Relación One-to-Many con PaqueteModel
+    private List<PaqueteModel> paquetes;
 
 	public Integer getIdDireccion() {
 		return idDireccion;
