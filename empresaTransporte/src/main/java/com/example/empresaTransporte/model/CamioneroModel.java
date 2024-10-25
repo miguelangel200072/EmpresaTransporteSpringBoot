@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class CamioneroModel {
@@ -42,6 +43,18 @@ public class CamioneroModel {
 			)
     @JsonIgnore
 	private List<CamionModel> camiones;
+	@OneToOne
+    @JoinColumn(name = "idUsuario")
+	@JsonIgnore
+    private UsuarioModel usuario;
+	
+	public UsuarioModel getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioModel usuario) {
+        this.usuario = usuario;
+    }
 
 	public Integer getIdCamionero() {
 		return idCamionero;
