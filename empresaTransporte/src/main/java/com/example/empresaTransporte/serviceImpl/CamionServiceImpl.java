@@ -46,12 +46,18 @@ public class CamionServiceImpl implements CamionService {
     @Override
     public CamionModel actualizarCamion(Integer id, CamionModel camion) {
         try {
-            camion.setIdCamion(id);
-            return camionRepository.save(camion);
+            // Verificar si el camión con el ID especificado existe
+            if (camionRepository.existsById(id)) {
+                camion.setIdCamion(id);
+                return camionRepository.save(camion);
+            } else {
+                throw new RuntimeException("No se encontró un camión con el ID especificado.");
+            }
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar el camión: " + e.getMessage(), e);
         }
     }
+
 
     @Override
     public void eliminarCamion(Integer id) {

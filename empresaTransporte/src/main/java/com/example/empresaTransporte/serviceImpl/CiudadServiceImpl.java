@@ -46,12 +46,18 @@ public class CiudadServiceImpl implements CiudadService {
     @Override
     public CiudadModel actualizarCiudad(Integer id, CiudadModel ciudad) {
         try {
-            ciudad.setIdCiudad(id);
-            return ciudadRepository.save(ciudad);
+            // Verificar si la ciudad con el ID especificado existe
+            if (ciudadRepository.existsById(id)) {
+                ciudad.setIdCiudad(id);
+                return ciudadRepository.save(ciudad);
+            } else {
+                throw new RuntimeException("No se encontró una ciudad con el ID especificado.");
+            }
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar la ciudad: " + e.getMessage(), e);
         }
     }
+
 
     @Override
     public void eliminarCiudad(Integer id) {

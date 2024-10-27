@@ -47,12 +47,18 @@ public class CamioneroServiceImpl implements CamioneroService {
     @Override
     public CamioneroModel actualizarCamionero(Integer id, CamioneroModel camionero) {
         try {
-            camionero.setIdCamionero(id);
-            return camioneroRepository.save(camionero);
+            // Verificar si el camionero con el ID especificado existe
+            if (camioneroRepository.existsById(id)) {
+                camionero.setIdCamionero(id);
+                return camioneroRepository.save(camionero);
+            } else {
+                throw new RuntimeException("No se encontró un camionero con el ID especificado.");
+            }
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar el camionero: " + e.getMessage(), e);
         }
     }
+
 
     @Override
     public void eliminarCamionero(Integer id) {
